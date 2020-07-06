@@ -1,0 +1,164 @@
+---
+title: "DGApp_dm"
+author: "G.R."
+date: "05/07/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Generating the data
+
+```{r}
+puppy_age_m <- c(2:11)
+puppy_age_y <- puppy_age_m/12
+dog_age_y <- seq(1, 30, by=0.5)
+all_ages_y <- round(c(puppy_age_y, dog_age_y), digits = 2)
+human_years <- round(16*log(all_ages_y)+ 31)
+human_years <- round(human_years, digits = 1)
+indexp <- paste(puppy_age_m, "months") 
+indexd <- paste(dog_age_y, "Years")  
+indexall <- c(indexp, indexd)
+```
+#### All data in one df
+```{r}
+dog_human_age <- data.frame(indexall, all_ages_y, human_years)
+```
+
+#### Function
+```{r}
+dogage <- function(x) {
+  result = 16*log(x) + 31
+  result = round(result, digits = 2)
+  print(paste("Your dog is", result, " years"))
+}
+```
+
+### PLOTS 
+#### Base R
+```{r}
+plot(dog_human_age$all_ages_y, dog_human_age$human_years, main = "How Dogs Age",
+     xlab = "Age of dog (years)", ylab = "Human equivalent age (years)")
+
+```
+
+#### GGPLOT
+```{r}
+library(ggplot2)
+doggos <- read.csv("dogage.csv")
+
+ggplot(doggos, aes(x=all_ages_y, y=human_years)) + geom_line(size=0.5) +
+  xlab("Dog Age") + ylab("Human Years") + ggtitle("How Dogs Age")
+```
+
+### Working version 1.0
+```{r}
+library(shiny)
+library(ggplot2)
+doggos <- read.csv("dogage.csv")
+
+ui <- fluidPage(
+  titlePanel("If your dog was human, how old would they be?"),
+  ## sidebar stuff
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("x", label = "Enter your dog's age(years)", value = 10, min = 0.2,
+                   max = 30),
+      actionButton("calc", "Calculate"),
+      
+      textOutput("result"),
+    ),
+    
+    mainPanel(
+      mainPanel(
+        h3("How Dogs Age"),
+      "This calculator is based on research detailed in ",
+        tags$a(href="https://www.biorxiv.org/content/10.1101/829192v2", "this paper"),
+        "originally found via",
+        tags$a(href="www.theguardian.com/lifeandstyle/2020/jul/02/every-human-year-not-equivalent-to-seven-dog-years-scientists-find", "This article in The Guardian"),
+        "Then blabh blah balh about the lovely graph",
+        plotOutput(outputId = "plot")
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$calc,{
+    age <- as.numeric(input$x)
+    calc <- 16*(log(age)) + 31
+    calc <- round(calc, digits = 1)
+    output$result <- renderPrint(paste("Your dog is", calc, "human years old!"))
+    #
+    output$plot <- renderPlot({
+      ggplot(doggos, aes(x=all_ages_y, y=human_years)) + geom_line(size=0.5) +
+        xlab("Dog Age") + ylab("Human Years")
+      
+    })
+  } 
+  )
+}
+shinyApp(ui, server)
+```
+
+
+
+### Failed Attempts
+
+#### Subsetting based on reactive input
+```{r eval=FALSE, warning=TRUE}
+library(shiny)
+
+# Define the UI
+ui <- fluidPage(
+  titlePanel("How old is your dog?"),
+  sidebarPanel(
+    selectInput(inputId = "x", label = "Select the age of your dog", 
+                choices = c("2 months", "3 months", "4 months", "5 months", "6 months", "7 months",  
+                            "8 months", "9 months", "10 months", "11 months", "1 Years", "1.5 Years", 
+                            "2 Years", "2.5 Years", "3 Years", "3.5 Years", "4 Years", "4.5 Years", 
+                            "5 Years", "5.5 Years", "6 Years", "6.5 Years", "7 Years", "7.5 Years", 
+                            "8 Years", "8.5 Years", "9 Years", "9.5 Years", "10 Years", "10.5 Years",
+                            "11 Years", "11.5 Years", "12 Years", "12.5 Years", "13 Years", "13.5 Years",
+                            "14 Years", "14.5 Years", "15 Years", "15.5 Years", "16 Years", "16.5 Years",
+                            "17 Years", "17.5 Years", "18 Years", "18.5 Years", "19 Years", "19.5 Years",
+                            "20 Years", "20.5 Years", "21 Years", "21.5 Years", "22 Years", "22.5 Years",
+                            "23 Years", "23.5 Years", "24 Years", "24.5 Years", "25 Years", "25.5 Years",
+                            "26 Years", "26.5 Years", "27 Years", "27.5 Years", "28 Years", "28.5 Years",
+                            "29 Years", "29.5 Years", "30 Years")),
+    textOutput("result")
+  ))
+
+server <- shinyServer(function(input, output){
+  
+  realage <- c("2 months", "3 months", "4 months", "5 months", "6 months", "7 months",  
+               "8 months", "9 months", "10 months", "11 months", "1 Years", "1.5 Years", 
+               "2 Years", "2.5 Years", "3 Years", "3.5 Years", "4 Years", "4.5 Years", 
+               "5 Years", "5.5 Years", "6 Years", "6.5 Years", "7 Years", "7.5 Years", 
+               "8 Years", "8.5 Years", "9 Years", "9.5 Years", "10 Years", "10.5 Years",
+               "11 Years", "11.5 Years", "12 Years", "12.5 Years", "13 Years", "13.5 Years",
+               "14 Years", "14.5 Years", "15 Years", "15.5 Years", "16 Years", "16.5 Years",
+               "17 Years", "17.5 Years", "18 Years", "18.5 Years", "19 Years", "19.5 Years",
+               "20 Years", "20.5 Years", "21 Years", "21.5 Years", "22 Years", "22.5 Years",
+               "23 Years", "23.5 Years", "24 Years", "24.5 Years", "25 Years", "25.5 Years",
+               "26 Years", "26.5 Years", "27 Years", "27.5 Years", "28 Years", "28.5 Years",
+               "29 Years", "29.5 Years", "30 Years")
+  humanage <- c(2.6, 8.8, 13.3, 17.1, 19.9, 22.3, 24.6, 26.4, 28.0, 29.7, 31.0, 37.5, 42.1, 45.7, 48.6,
+                51.0, 53.2, 55.1, 56.8, 58.3, 59.7, 61.0, 62.1, 63.2, 64.3, 65.2, 66.2, 67.0, 67.8, 68.6,
+                69.4, 70.1, 70.8, 71.4, 72.0, 72.6, 73.2, 73.8, 74.3, 74.8, 75.4, 75.8, 76.3, 76.8, 77.2,
+                77.7, 78.1, 78.5, 78.9, 79.3, 79.7, 80.1, 80.5, 80.8, 81.2, 81.5, 81.8, 82.2, 82.5, 82.8,
+                83.1, 83.4, 83.7, 84.0, 84.3, 84.6, 84.9, 85.2, 85.4)
+  
+  df <- data.frame(realage, humanage)
+  
+  df_subset <- reactive({
+    a <- subset(df, realage == input$x)
+    return(a)
+  output$result <- renderText(paste("Your dog is",(df_subset()), " human years old")
+  })
+  
+  shinyApp(ui = ui, server = server)
+```
+
