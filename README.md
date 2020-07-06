@@ -1,9 +1,10 @@
 ## This is the readme for the DG project 
 although i am using it to practice github
 
-###### commit error
-If i get "Your branch is ahead of 'origin/master' by x commits"
+###### If u get commit error
+ "Your branch is ahead of 'origin/master' by x commits"
 use: git reset --hard origin/master
+in the terminal of Rstudio
 this resets git commits to whatever is saved locally (i think)
 
 #### From https://happygitwithr.com/rstudio-git-github.html

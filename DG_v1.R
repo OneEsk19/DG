@@ -26,29 +26,35 @@ doggos <- read.csv("dogage.csv")
 
 
 ui <- fluidPage(theme = shinytheme("united"),
-        h1("If your dog was human, how old would they be?"),
-## sidebar stuff
-  sidebarLayout(
-    sidebarPanel(
-      numericInput("x", label = "Enter your dog's age(years)", value = 10, min = 0.2,
-                   max = 30),
-      actionButton("calc", "Calculate"),
-      
-      textOutput("result"),
-    ),
-    
-    mainPanel(
-      mainPanel(
-        h3("How Dogs Age"),
-        "This calculator is based on research detailed in ",
-        tags$a(href="https://www.biorxiv.org/content/10.1101/829192v2", "this paper"),
-        "originally found via",
-        tags$a(href="www.theguardian.com/lifeandstyle/2020/jul/02/every-human-year-not-equivalent-to-seven-dog-years-scientists-find", "This article in The Guardian"),
-        "Then blabh blah balh about the lovely graph",
-        plotOutput(outputId = "plot")
-      )
-    )
-  )
+                h1("If your dog was human, how old would they be?"),
+                ## sidebar stuff
+                sidebarLayout(
+                  sidebarPanel(
+                    numericInput("x", label = "Enter your dog's age(years)", value = 10, min = 0.2,
+                                 max = 30),
+                    actionButton("calc", "Calculate"),
+                    
+                    textOutput("result"),
+                    tags$br(),
+                    "This calculator is based on recent research detailed in 2019 in ",
+                    tags$a(href="https://www.biorxiv.org/content/10.1101/829192v2", "this paper."),
+                    tags$br(),
+                    "For a more friendly synopsis of the reasearch read",
+                    tags$a(href="www.theguardian.com/lifeandstyle/2020/jul/02/every-human-year-not-equivalent-to-seven-dog-years-scientists-find", "this article in The Guardian"),
+                  ),
+                  
+                  mainPanel(
+                    mainPanel(
+                      h3("How Dogs Age"),
+                      
+                      "As you can see from this",
+                      tags$a(href="https://www.youtube.com/watch?v=sIlNIVXpIns", "graph"),
+                      ", a dog's childhood is very rapid, which reflects thier wolf ancestry;, 
+                      in that wild animals have to adapt very quickly in order to survive.",
+                      plotOutput(outputId = "plot")
+                    )
+                  )
+                )
 )
 
 server <- function(input, output, session) {
