@@ -3,12 +3,31 @@
 #### https://towardsdatascience.com/get-started-with-examples-of-reactivity-in-in-shiny-apps-db409079dd11
 
 library(shiny)
+library(shinythemes)
 library(ggplot2)
+
+mytheme3 <- theme(legend.text = element_text(face = "italic",colour="steelblue4",
+                                             family = "Helvetica", size = rel(1)), 
+                  axis.title = element_text(colour="steelblue4",family = "Helvetica",
+                                            size = rel(1.5)), 
+                  axis.text = element_text(family = "Helvetica",colour = "steelblue1",
+                                           size = rel(1.5)), 
+                  axis.line = element_line(size = 1,colour = "black"), 
+                  axis.ticks = element_line(colour="grey",size = rel(1.4)),
+                  panel.grid.major = element_line(colour="grey",size = rel(0.5)), 
+                  panel.grid.minor = element_blank(), 
+                  panel.background = element_rect(fill = "whitesmoke"), 
+                  legend.key = element_rect(fill = "whitesmoke"), 
+                  legend.title = element_text(colour = "steelblue",size = rel(1.5),
+                                              family = "Helvetica"), 
+                  plot.title = element_text(colour = "steelblue4", face = "bold",
+                                            size = rel(1.7),family = "Helvetica"))
 doggos <- read.csv("dogage.csv")
 
-ui <- fluidPage(
-  titlePanel("If your dog was human, how old would they be?"),
-  ## sidebar stuff
+
+ui <- fluidPage(theme = shinytheme("united"),
+        h1("If your dog was human, how old would they be?"),
+## sidebar stuff
   sidebarLayout(
     sidebarPanel(
       numericInput("x", label = "Enter your dog's age(years)", value = 10, min = 0.2,
@@ -41,7 +60,7 @@ server <- function(input, output, session) {
     #
     output$plot <- renderPlot({
       ggplot(doggos, aes(x=all_ages_y, y=human_years)) + geom_line(size=0.5) +
-        xlab("Dog Age") + ylab("Human Years")
+        xlab("Dog Age") + ylab("Human Years") + mytheme3
       
     })
   } 
