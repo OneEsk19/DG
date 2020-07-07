@@ -1,7 +1,3 @@
-#######THIS WORKS!
-
-#### https://towardsdatascience.com/get-started-with-examples-of-reactivity-in-in-shiny-apps-db409079dd11
-
 library(shiny)
 library(shinythemes)
 library(ggplot2)
@@ -22,19 +18,22 @@ mytheme3 <- theme(legend.text = element_text(face = "italic",colour="steelblue4"
                                               family = "Helvetica"), 
                   plot.title = element_text(colour = "steelblue4", face = "bold",
                                             size = rel(1.7),family = "Helvetica"))
+
+
 doggos <- read.csv("dogage.csv")
 
-
 ui <- fluidPage(theme = shinytheme("united"),
+                
                 h1("If your dog was human, how old would they be?"),
-                ## sidebar stuff
+                
                 sidebarLayout(
                   sidebarPanel(
-                    numericInput("x", label = "Enter your dog's age(years)", value = 10, min = 0.2,
-                                 max = 30),
+                    selectInput("x", label = "Select your dog's age", choices = doggos$indexall),
                     actionButton("calc", "Calculate"),
-                    
-                    textOutput("result"),
+                    tags$br(),
+                    tags$br(),
+                    span(textOutput("result"), style="color:#E95420; font-size:14px; font-weight:bold"),
+                    tags$br(),
                     tags$br(),
                     "This calculator is based on recent research detailed in 2019 in ",
                     tags$a(href="https://www.biorxiv.org/content/10.1101/829192v2", "this paper."),
@@ -46,7 +45,6 @@ ui <- fluidPage(theme = shinytheme("united"),
                   mainPanel(
                     mainPanel(
                       h3("How Dogs Age"),
-                      
                       "As you can see from this",
                       tags$a(href="https://www.youtube.com/watch?v=sIlNIVXpIns", "graph"),
                       ", a dog's childhood is very rapid, which reflects thier wolf ancestry;, 
@@ -59,14 +57,14 @@ ui <- fluidPage(theme = shinytheme("united"),
 
 server <- function(input, output, session) {
   observeEvent(input$calc,{
-    age <- as.numeric(input$x)
-    calc <- 16*(log(age)) + 31
-    calc <- round(calc, digits = 1)
-    output$result <- renderPrint(paste("Your dog is", calc, "human years old!"))
-    #
+    var1 <- doggos[ which(doggos$indexall==input$x), ]
+    var2 <- var1$human_years
+    output$result <- renderText(paste("Your dog is", var2, "human years old!"))
     output$plot <- renderPlot({
       ggplot(doggos, aes(x=all_ages_y, y=human_years)) + geom_line(size=0.5) +
-        xlab("Dog Age") + ylab("Human Years") + mytheme3
+        geom_point(aes(x=var1$all_ages_y, y=var1$human_years), colour="red", size=4) +
+        ggtitle("Your dog's age is shown in red") + xlab("Dog Age") + ylab("Human Years") + mytheme3
+      
       
     })
   } 
