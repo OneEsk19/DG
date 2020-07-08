@@ -1,6 +1,7 @@
 <h1> Dog to human age calculator App <br> <br>
  
  <h3> Contents: <br>
+ <p>
  - DGV1_Working_Layout. R: Trying out layouts, incomplete rough work<br>
  - DG_Documentation.Rmd: Markdown doc detailing some of the process<br>
  - DG_Working.R: Earliest working iteration<br>
