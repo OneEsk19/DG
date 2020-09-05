@@ -1,7 +1,8 @@
-# Dog to human age calculator App <br> <br>
+# Dog to human age calculator App
+
 ### Live at: https://oneesk19.shinyapps.io/dgapp
  
- ### Contents:
+ ### Contents
 
 | File      | Description    |
 | :------------- | :----------: |
