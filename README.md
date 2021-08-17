@@ -1,8 +1,11 @@
-# Dog to human age calculator App
+### Ok this is nothing big and fancy, but it's my first (and so far only) Shiny App
 
-### Live at: https://oneesk19.shinyapps.io/dgapp
- 
- ### Contents
+# Dog to human age calculator App  
+This is based on a research paper where they used epigenetic markers to determine dog / human age equivalency.
+
+### Live at: https://oneesk19.shinyapps.io/dgapp  
+
+### Contents
 
 | File      | Description    |
 | :------------- | :----------: |
@@ -14,3 +17,5 @@
 | app.R | Finished app (using selection input) |
 | dogage.csv | All calculated data and results  |
 | subsettingDGstuff.R | Trying out subsetting methods, incomplete rough work  |
+
+I am not 100% happy with it, and I will improve it at some point.
